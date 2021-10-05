@@ -5,10 +5,10 @@ using System.Numerics;
 namespace lab1_V1Data
 {
   public struct DataItem {
-    public double x;
-    public double y;
-    public Complex c;
-    
+    public double x { get; set; }
+    public double y { get; set; }
+    public Complex c { get; set; }
+
     public DataItem(double x0, double y0, Complex c0) {
       x = x0;
       y = y0;
@@ -73,8 +73,7 @@ namespace lab1_V1Data
         double y = rnd.NextDouble() * 2 * nItems - nItems; 
         DataItem di = new DataItem(x, y, F(x,y));
         
-        addSum += Convert.ToInt32(Add(di));
-        // addSum += Add(ref di) ? 1 : 0;
+        addSum += Add(di) ? 1 : 0;
       }
 
       return addSum;
@@ -93,7 +92,7 @@ namespace lab1_V1Data
     }
 
     public override string ToString() {
-      return $"Type: List<DataItem>, {base.ToString()}, num of elements: {data.Count}";
+      return $"Type: V1DataList (List<DataItem>), {base.ToString()}, num of elements: {data.Count}";
     }
 
     public override string ToLongString(string format) {
@@ -147,7 +146,7 @@ namespace lab1_V1Data
     }
 
     public override string ToString() {
-      return $"Type: Complex[,], {base.ToString()}" + "\n" +
+      return $"Type: V1DataArray (Complex[,]), {base.ToString()}" + "\n" +
         $"node: X - {nodeX}, Y - {nodeY}; step: X - {stepX}, Y - {stepY}";
     }
 
@@ -167,16 +166,14 @@ namespace lab1_V1Data
       for (var i = 0; i < arr.nodeX; i++) {
         for (var j = 0; j < arr.nodeY; j++) {
           DataItem di = new DataItem(i * arr.stepX, j * arr.stepY, arr.valueArr[i, j]);
-          if (list.Add(di) == false) {
-            Console.WriteLine($"Add error at {i}, {j}");
-          }
+          list.Add(di);
         }
       }
 
       return list;
     }
     //implicit
-    
+
   }
 
   class V1MainCollection {
@@ -238,6 +235,7 @@ namespace lab1_V1Data
 
     static void Main(string[] args) {
       string format = "f3";
+      
       V1DataArray arr1 = new V1DataArray("arr1", DateTime.Now, 3, 3, 0.5, 0.5, Methods.Method1);
       Console.WriteLine(arr1.ToLongString(format));
 
