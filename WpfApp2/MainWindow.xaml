@@ -1,0 +1,145 @@
+﻿<Window x:Class="WpfApp2.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApp2"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="500" Width="1100" Loaded="Window_Loaded">
+    <Window.Resources>
+        <ControlTemplate x:Key="validationFailed">
+            <StackPanel Orientation="Horizontal">
+                <Border BorderBrush="Red" BorderThickness="2">
+                    <AdornedElementPlaceholder />
+                </Border>
+            </StackPanel>
+        </ControlTemplate>
+    </Window.Resources>
+    <Window.CommandBindings>
+        <CommandBinding Command="local:Cmd.MeasuredData" CanExecute="MD_CanExecute" Executed="MD_Executed"/>
+        <CommandBinding Command="local:Cmd.Splines" CanExecute="Spl_CanExecute" Executed="Spl_Executed" />
+    </Window.CommandBindings>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="5*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+
+
+        <Menu Height="20" VerticalAlignment="Top" Grid.ColumnSpan="3">
+            <MenuItem Header="MeasuredData" Command="local:Cmd.MeasuredData">
+            </MenuItem>
+            <MenuItem Header="Splines" Command="local:Cmd.Splines">
+            </MenuItem>
+        </Menu>
+
+        <ComboBox Name="function_choice" HorizontalAlignment="Left" Margin="77,99,0,0" VerticalAlignment="Top" Width="120" Grid.Column="0" >
+            <TextBlock Name="button_lin" Text="Linear"/>
+            <TextBlock Name="button_cub" Text="Cubic"/>
+            <TextBlock Name="button_rand" Text="Random"/>
+        </ComboBox>
+        <TextBlock HorizontalAlignment="Left" Margin="10,100,0,0" TextWrapping="Wrap" Text="Function:" VerticalAlignment="Top"/>
+        <Label Content="Segment limits: [" HorizontalAlignment="Left" Margin="10,145,0,0" VerticalAlignment="Top"/>
+        <TextBox Name="left_irreg" HorizontalAlignment="Left" Margin="110,152,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="70"
+                 Validation.ErrorTemplate="{StaticResource validationFailed}">
+            <TextBox.Text>
+                <Binding Path="vd.splData.mdata.segment0" UpdateSourceTrigger="PropertyChanged" >
+                    <Binding.ValidationRules>
+                        <DataErrorValidationRule />
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+        <TextBox Name="right_irreg" HorizontalAlignment="Left" Margin="198,152,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                  Validation.ErrorTemplate="{StaticResource validationFailed}">
+            <TextBox.Text>
+                <Binding Path="vd.splData.mdata.segment1" UpdateSourceTrigger="PropertyChanged" >
+                    <Binding.ValidationRules>
+                        <DataErrorValidationRule />
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+        <Label Content=" , " HorizontalAlignment="Left" Margin="179,150,0,0" VerticalAlignment="Top"/>
+        <Label Content="]" HorizontalAlignment="Left" Margin="278,145,0,0" VerticalAlignment="Top"/>
+        <Label Content="Nodes number: " HorizontalAlignment="Left" Margin="10,180,0,0" VerticalAlignment="Top"/>
+
+        <TextBox Grid.Column="0" HorizontalAlignment="Left" Width="120" Margin="110,185,0,0" VerticalAlignment="Top" 
+                 Validation.ErrorTemplate="{StaticResource validationFailed}">
+            <TextBox.Text>
+                <Binding Path="vd.splData.mdata.len" UpdateSourceTrigger="PropertyChanged" >
+                    <Binding.ValidationRules>
+                        <DataErrorValidationRule />
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+
+
+        <Label Grid.RowSpan="2" Content="Nodes number: " HorizontalAlignment="Left" Margin="10,271,0,0" VerticalAlignment="Top"/>
+        <TextBox Grid.RowSpan="2" Name="nodes_reg" HorizontalAlignment="Left" Margin="110,277,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Validation.ErrorTemplate="{StaticResource validationFailed}">
+            <TextBox.Text>
+                <Binding Path="vd.splData.spl_param.len" UpdateSourceTrigger="PropertyChanged" >
+                    <Binding.ValidationRules>
+                        <DataErrorValidationRule />
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+        <Label Grid.RowSpan="2" Content="1st derivative on ends: [" HorizontalAlignment="Left" Margin="10,310,0,0" VerticalAlignment="Top"/>
+        <TextBox Grid.RowSpan="2" Name="der_left" HorizontalAlignment="Left" Margin="143,317,0,0" TextWrapping="Wrap" Text="{Binding vd.splData.spl_param.derivative[0], UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="60"/>
+        <TextBox Grid.RowSpan="2" Name="der_right" Margin="215,317,0,0" TextWrapping="Wrap" Text="{Binding vd.splData.spl_param.derivative[1], UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60"/>
+        <Label Grid.RowSpan="2" Content=" , " HorizontalAlignment="Left" Margin="199,315,0,0" VerticalAlignment="Top"/>
+        <Label Grid.RowSpan="2" Content="]" HorizontalAlignment="Left" Margin="280,310,0,0" VerticalAlignment="Top"/>
+        <Label Grid.RowSpan="2" Content="Integral: [" HorizontalAlignment="Left" Margin="10,345,0,0" VerticalAlignment="Top"/>
+        <TextBox Grid.RowSpan="2"  Name="int_left" HorizontalAlignment="Left" Margin="71,352,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="70" Validation.ErrorTemplate="{StaticResource validationFailed}">
+            <TextBox.Text>
+                <Binding Path="vd.splData.mdata.int_limits0" UpdateSourceTrigger="PropertyChanged" >
+                    <Binding.ValidationRules>
+                        <DataErrorValidationRule />
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+        <TextBox Grid.RowSpan="2" Name="int_right" HorizontalAlignment="Left" Margin="166,352,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="70" Validation.ErrorTemplate="{StaticResource validationFailed}">
+            <TextBox.Text>
+                <Binding Path="vd.splData.mdata.int_limits1" UpdateSourceTrigger="PropertyChanged" >
+                    <Binding.ValidationRules>
+                        <DataErrorValidationRule />
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+        <Label Grid.RowSpan="2" Content=" , " HorizontalAlignment="Left" Margin="144,350,0,0" VerticalAlignment="Top"/>
+        <Label Grid.RowSpan="2" Content="]" HorizontalAlignment="Left" Margin="243,345,0,0" VerticalAlignment="Top"/>
+        <Label Grid.RowSpan="2"  Content="Parameters" HorizontalAlignment="Left" Margin="97,34,0,0" VerticalAlignment="Top"/>
+        <Label Grid.RowSpan="2" Content="MeasuredData:" HorizontalAlignment="Left" Margin="90,70,0,0" VerticalAlignment="Top"/>
+        <Label Grid.RowSpan="2" Content="SplineParameters:" HorizontalAlignment="Left" Margin="80,243,0,0" VerticalAlignment="Top"/>
+
+        <Label Content="MeasuredData:" HorizontalAlignment="Center" Margin="0,35,0,0" VerticalAlignment="Top" Grid.Column="1"/>
+        <ListBox Grid.Column="1" Grid.Row="0" ItemsSource="{Binding vd.splData.mdata.Str}" Margin="20,70,20,0" />
+
+        <Label Content="SplineParameters:" HorizontalAlignment="Left" Margin="94,20,0,0" VerticalAlignment="Top" Grid.Column="1" Grid.Row="1"/>
+        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding vd.splData.Info}" Margin="20,50,20,0"/>
+
+        <lvc:CartesianChart Grid.Column="2" x:Name="Graph" Series="{Binding vd.cd.sc}" LegendLocation="Right" 
+                             Margin="0,0,0,60" Grid.RowSpan="2">
+            <lvc:CartesianChart.AxisX>
+                <lvc:Axis Title="Point" LabelFormatter="{Binding vd.cd.Formatter}"></lvc:Axis>
+            </lvc:CartesianChart.AxisX>
+            <lvc:CartesianChart.AxisY>
+                <lvc:Axis Title="Value" LabelFormatter="{Binding vd.cd.Formatter}"></lvc:Axis>
+            </lvc:CartesianChart.AxisY>
+        </lvc:CartesianChart>
+        <Button Name="clear" Grid.Column="2" Grid.Row="2" Content="Clear" HorizontalAlignment="Center" VerticalAlignment="Bottom" Click="clear_click" Margin="0,40,0,30"/>
+        <!--RenderTransformOrigin="-7.853,0.7"-->
+
+
+    </Grid>
+</Window>
